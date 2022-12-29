@@ -7,6 +7,7 @@
 #include <conio.h>
 #include <stddef.h>
 #include <stdlib.h>
+#define LEN 100
 
 struct Denrozhd
 {
@@ -21,21 +22,86 @@ struct Denrozhd
 
 typedef struct Denrozhd DR;
 
+DR input(DR* dr, int count);//Р”РѕР±Р°РІР»РµРЅРёРµ РЅРѕРІС‹С… Р·Р°РїРёСЃРµР№
+
+
+void output(DR* dr, int count);//Р’С‹РІРѕРґ Р·Р°РїРёСЃРµР№
+
+
+
+int search_output(DR* dr, int count);//Р’С‹РІРѕРґ Р·Р°РїРёСЃРµР№
+
+
+int search(DR* dr, int count);//РџРѕРёСЃРє Р·Р°РїРёСЃРµР№ РїРѕ РІС‹Р±СЂР°РЅРЅРѕР№ РєР°С‚РµРіРѕСЂРёРё
+
+
+DR sort(DR* dr, int count);//РЎРѕСЂС‚РёСЂРѕРІРєР° Р·Р°РїРёСЃРµР№ РїРѕ СѓР±С‹РІР°РЅРёСЋ
+
+
+int write(DR* dr, int count);//Р”РѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРµР№ РІ С„Р°Р№Р» 
+
+
+int read();//Р§С‚РµРЅРёРµ Р·Р°РїРёСЃРµР№ РёР· С„Р°Р№Р»Р°
+
+int main()
+{
+	system("chcp 1251");
+	setlocale(0, "Rus");
+	int flag = 1;
+	int k = 0;
+	dr = malloc(k * sizeof(int));
+	int z;
+
+	while (flag != 0)
+	{
+		printf("\nР’РІРѕРґ РґР°РЅРЅС‹С… - 1\nР’С‹РІРѕРґ РґР°РЅРЅС‹С… - 2\nРџРѕРёСЃРє РїРѕ РєР°С‚РµРіРѕСЂРёСЏРј - 3\nРЎРѕСЂС‚РёСЂРѕРІРєР° - 4\nР—Р°РїРёСЃСЊ РґР°РЅРЅС‹С… РІ С„Р°Р№Р» - 5\nР’С‹РІРѕРґ РґР°РЅРЅС‹С… РёР· С„Р°Р№Р»Р° - 6\nР’С‹С…РѕРґ РёР· РїСЂРѕРіСЂР°РјРјС‹ - 7\n");
+		scanf("%d", &z);
+		switch (z)
+		{
+		case 1:
+			printf("Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїРёСЃРµР№\n");
+			scanf("%d", &k);
+			input(dr, k);
+			break;
+			break;
+		case 2:
+			output(dr, k);
+			break;
+		case 3:
+			search(dr, k);
+			break;
+		case 4:
+			sort(dr, k);
+			break;
+		case 5:
+			write(dr,k);
+			break;
+		case 6:
+			read();
+			break;
+		case 7:
+			flag = 0;
+			break;
+
+		}
+	}
+}
+
 DR input(DR* dr, int count)
 {
 	for (int i = 0; i < count; i++)
 	{
-		printf("Введите имя:");
+		printf("Р’РІРµРґРёС‚Рµ РёРјСЏ:");
 		scanf("%s", dr->name);
-		printf("Введите фамилию:");
+		printf("Р’РІРµРґРёС‚Рµ С„Р°РјРёР»РёСЋ:");
 		scanf("%s", dr->surname);
-		printf("Введите Категорию:");
+		printf("Р’РІРµРґРёС‚Рµ РљР°С‚РµРіРѕСЂРёСЋ:");
 		scanf("%s", dr->cathegory);
-		printf("Введите день:");
+		printf("Р’РІРµРґРёС‚Рµ РґРµРЅСЊ:");
 		scanf("%d", &dr->day);
-		printf("Введите месяц:");
+		printf("Р’РІРµРґРёС‚Рµ РјРµСЃСЏС†:");
 		scanf("%d", &dr->month);
-		printf("Введите год:");
+		printf("Р’РІРµРґРёС‚Рµ РіРѕРґ:");
 		scanf("%d", &dr->year);
 		printf("\n");
 		dr++;
@@ -47,39 +113,38 @@ void output(DR* dr, int count)
 {
 	for (int i = 0; i < count; i++)
 	{
-		printf("Имя: %s\nФамилия: %s\nКатегория: %s\nДата рождения: %d/%d/%d\n\n",dr->name, dr->surname, dr->cathegory, dr->day, dr->month, dr->year);
+		printf("РРјСЏ: %s\nР¤Р°РјРёР»РёСЏ: %s\nРљР°С‚РµРіРѕСЂРёСЏ: %s\nР”Р°С‚Р° СЂРѕР¶РґРµРЅРёСЏ: %d/%d/%d\n\n", dr->name, dr->surname, dr->cathegory, dr->day, dr->month, dr->year);
 		dr++;
-		
+
 	}
 	return 0;
 
 }
 
-
 int search_output(DR* dr, int count)
 {
-	printf("Имя:%s\nФамилия:%s\nКатегория:%s\nДата: %d/%d/%d  \n", dr[count].name, dr[count].surname, dr[count].cathegory, dr[count].day, dr[count].month, dr[count].year);
+	printf("РРјСЏ:%s\nР¤Р°РјРёР»РёСЏ:%s\nРљР°С‚РµРіРѕСЂРёСЏ:%s\nР”Р°С‚Р°: %d/%d/%d  \n", dr[count].name, dr[count].surname, dr[count].cathegory, dr[count].day, dr[count].month, dr[count].year);
 }
 
 int search(DR* dr, int count)
 {
 	int z;
 	short name_f, surname_f, cathegory_f;
-	
+
 
 	int day_f;
 	int month_f;
 	int year_f;
 
-	printf("Выберите критерий поиска\n");
-	printf("По имени - 1\n");
-	printf("По фамилии - 2\n");
-	printf("По категории - 3\n");
-	printf("По дате рождения - 4\n");
+	printf("Р’С‹Р±РµСЂРёС‚Рµ РєСЂРёС‚РµСЂРёР№ РїРѕРёСЃРєР°\n");
+	printf("РџРѕ РёРјРµРЅРё - 1\n");
+	printf("РџРѕ С„Р°РјРёР»РёРё - 2\n");
+	printf("РџРѕ РєР°С‚РµРіРѕСЂРёРё - 3\n");
+	printf("РџРѕ РґР°С‚Рµ СЂРѕР¶РґРµРЅРёСЏ - 4\n");
 	scanf("%d", &z);
 	if (z == 1)
 	{
-		printf("Введите имя:\n");
+		printf("Р’РІРµРґРёС‚Рµ РёРјСЏ:\n");
 		scanf("%s", &name_f);
 		for (int i = 0; i < count; i++)
 		{
@@ -92,7 +157,7 @@ int search(DR* dr, int count)
 	}
 	if (z == 2)
 	{
-		printf("Введите фамилию:\n");
+		printf("Р’РІРµРґРёС‚Рµ С„Р°РјРёР»РёСЋ:\n");
 		scanf("%s", &surname_f);
 		for (int i = 0; i < count; i++)
 		{
@@ -105,7 +170,7 @@ int search(DR* dr, int count)
 	}
 	if (z == 3)
 	{
-		printf("Введите категорию:\n");
+		printf("Р’РІРµРґРёС‚Рµ РєР°С‚РµРіРѕСЂРёСЋ:\n");
 		scanf("%s", &cathegory_f);
 		for (int i = 0; i < count; i++)
 		{
@@ -118,11 +183,11 @@ int search(DR* dr, int count)
 	}
 	if (z == 4)
 	{
-		printf("Введите день\n");
+		printf("Р’РІРµРґРёС‚Рµ РґРµРЅСЊ\n");
 		scanf("%d", &day_f);
-		printf("Введите месяц\n");
+		printf("Р’РІРµРґРёС‚Рµ РјРµСЃСЏС†\n");
 		scanf("%d", &month_f);
-		printf("Введите год\n");
+		printf("Р’РІРµРґРёС‚Рµ РіРѕРґ\n");
 		scanf("%d", &year_f);
 
 		for (int i = 0; i < count; i++)
@@ -137,41 +202,45 @@ int search(DR* dr, int count)
 
 }
 
-
-	
-int main()
+DR sort(DR* dr, int count)
 {
-	system("chcp 1251");
-	setlocale(0, "Rus");
-	int flag = 1;
-	int k = 0;
-	dr = malloc(k * sizeof(int));
-	int z;
-
-	while (flag != 0)
+	DR sort;
+	printf("Р’РІРµРґРёС‚Рµ С‚РµРєСѓС‰РёР№ РіРѕРґ\n");
+	int nowyear;
+	scanf("%d", &nowyear);
+	for (int i = count - 1; i >= 0; i--)
 	{
-		printf("\nВвод данных - 1\nВывод данных - 2\nПоиск по категориям - 3\nСортировка - 4\nВыход из программы - 5\n");
-		scanf("%d", &z);
-		switch (z)
+		for (int g = 0; g < i; g++)
 		{
-		case 1:
-			printf("Введите количество записей\n");
-			scanf("%d", &k);
-			input(dr, k);
-			break;
-			break;
-		case 2:
-			output(dr, k);
-			break;
-		case 3:
-			search(dr, k);
-			break;
-		case 4:
-			break;
-		case 5:
-			flag = 0;
-			break;
-
+			if ((nowyear - dr[g].year) < (nowyear - dr[g + 1].year))
+			{
+				sort = dr[g];
+				dr[g] = dr[g + 1];
+				dr[g + 1] = sort;
+			}
 		}
 	}
+	return *dr;
+	printf("РЎРѕСЂС‚РёСЂРѕРІРєР° Р·Р°РІРµСЂС€РµРЅР°");
+}
+
+int write(DR* dr, int count)
+{
+
+	FILE* ptr_file = fopen("kp.txt", "w");
+	for (int i = 0; i < count; i++)
+	{
+		fprintf(ptr_file, "РРјСЏ:%s\nР¤Р°РјРёР»РёСЏ:%s\nРљР°С‚РµРіРѕСЂРёСЏ:%s\nР”Р°С‚Р°: %d/%d/%d\n", dr[i].name, dr[i].surname, dr[i].cathegory, dr[i].day, dr[i].month, dr[i].year);
+	}
+	fclose(ptr_file);
+	printf("\nР”Р°РЅРЅС‹Рµ СѓСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅС‹\n");
+}
+
+int read()
+{
+	char rfile[LEN];
+	FILE* ptr_file = fopen("kp.txt", "r");
+	while (fgets(rfile, LEN, ptr_file))
+		fprintf(stdout, "%s\n", rfile);
+
 }
