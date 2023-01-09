@@ -27,6 +27,11 @@ DR input(DR* dr, int count);//Добавление новых записей
 
 void output(DR* dr, int count);//Вывод записей
 
+int write(DR* dr, int count);//Добавление записей в файл 
+
+
+int read();//Чтение записей из файла
+
 
 
 int search_output(DR* dr, int count);//Вывод записей
@@ -38,10 +43,7 @@ int search(DR* dr, int count);//Поиск записей по выбранно�
 DR sort(DR* dr, int count);//Сортировка записей по убыванию
 
 
-int write(DR* dr, int count);//Добавление записей в файл 
 
-
-int read();//Чтение записей из файла
 
 int main()
 {
@@ -54,7 +56,7 @@ int main()
 
 	while (flag != 0)
 	{
-		printf("\nВвод данных - 1\nВывод данных - 2\nПоиск по категориям - 3\nСортировка - 4\nЗапись данных в файл - 5\nВывод данных из файла - 6\nВыход из программы - 7\n");
+		printf("\nВвод данных - 1\nВывод данных - 2\nЗапись данных в файл - 3\nВывод данных из файла - 4\nПоиск по катерогрии - 5\nСортировка - 6\nВыход из программы - 7\n");
 		scanf("%d", &z);
 		switch (z)
 		{
@@ -63,21 +65,20 @@ int main()
 			scanf("%d", &k);
 			input(dr, k);
 			break;
-			break;
 		case 2:
 			output(dr, k);
 			break;
 		case 3:
-			search(dr, k);
+			write(dr, k);
 			break;
 		case 4:
-			sort(dr, k);
+			read();
 			break;
 		case 5:
-			write(dr,k);
+			search(dr, k);
 			break;
 		case 6:
-			read();
+			sort(dr, k);
 			break;
 		case 7:
 			flag = 0;
@@ -121,6 +122,28 @@ void output(DR* dr, int count)
 
 }
 
+int write(DR* dr, int count)
+{
+
+	FILE* ptr_file = fopen("kp.txt", "w");
+	for (int i = 0; i < count; i++)
+	{
+		fprintf(ptr_file, "Имя:%s\nФамилия:%s\nКатегория:%s\nДата: %d/%d/%d\n", dr[i].name, dr[i].surname, dr[i].cathegory, dr[i].day, dr[i].month, dr[i].year);
+	}
+	fclose(ptr_file);
+	printf("\nДанные успешно сохранены\n");
+}
+
+int read()
+{
+	char rfile[LEN];
+	FILE* ptr_file = fopen("kp.txt", "r");
+	while (fgets(rfile, LEN, ptr_file))
+		fprintf(stdout, "%s\n", rfile);
+
+}
+
+
 int search_output(DR* dr, int count)
 {
 	printf("Имя:%s\nФамилия:%s\nКатегория:%s\nДата: %d/%d/%d  \n", dr[count].name, dr[count].surname, dr[count].cathegory, dr[count].day, dr[count].month, dr[count].year);
@@ -129,7 +152,7 @@ int search_output(DR* dr, int count)
 int search(DR* dr, int count)
 {
 	int z;
-	short name_f, surname_f, cathegory_f;
+	short name_f[20], surname_f[20], cathegory_f[20];
 
 
 	int day_f;
@@ -148,7 +171,7 @@ int search(DR* dr, int count)
 		scanf("%s", &name_f);
 		for (int i = 0; i < count; i++)
 		{
-			if (name_f = dr[i].name)
+			if (strcmp((dr + i)->name, name_f) == 0)
 			{
 				search_output(dr, i);
 			}
@@ -161,7 +184,7 @@ int search(DR* dr, int count)
 		scanf("%s", &surname_f);
 		for (int i = 0; i < count; i++)
 		{
-			if (surname_f = dr[i].surname)
+			if (strcmp((dr + i)->surname, surname_f) == 0)
 			{
 				search_output(dr, i);
 			}
@@ -174,7 +197,7 @@ int search(DR* dr, int count)
 		scanf("%s", &cathegory_f);
 		for (int i = 0; i < count; i++)
 		{
-			if (cathegory_f = dr[i].cathegory)
+			if (strcmp((dr + i)->cathegory, cathegory_f) == 0)
 			{
 				search_output(dr, i);
 			}
@@ -220,27 +243,8 @@ DR sort(DR* dr, int count)
 			}
 		}
 	}
+	printf("\nСортировка завершена\n");
 	return *dr;
-	printf("Сортировка завершена");
+	
 }
 
-int write(DR* dr, int count)
-{
-
-	FILE* ptr_file = fopen("kp.txt", "w");
-	for (int i = 0; i < count; i++)
-	{
-		fprintf(ptr_file, "Имя:%s\nФамилия:%s\nКатегория:%s\nДата: %d/%d/%d\n", dr[i].name, dr[i].surname, dr[i].cathegory, dr[i].day, dr[i].month, dr[i].year);
-	}
-	fclose(ptr_file);
-	printf("\nДанные успешно сохранены\n");
-}
-
-int read()
-{
-	char rfile[LEN];
-	FILE* ptr_file = fopen("kp.txt", "r");
-	while (fgets(rfile, LEN, ptr_file))
-		fprintf(stdout, "%s\n", rfile);
-
-}
