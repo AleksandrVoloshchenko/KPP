@@ -1,13 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include <locale.h>
-#include <time.h>
-#include <ctype.h>
-#include <string.h>
-#include <conio.h>
-#include <stddef.h>
 #include <stdlib.h>
-#define LEN 100
+#include <string.h>
+#include <malloc.h>
+#include <time.h>
+
+
 
 struct Denrozhd
 {
@@ -18,233 +16,315 @@ struct Denrozhd
 	int month;
 	int year;
 
-}*dr;
+};
 
 typedef struct Denrozhd DR;
 
-DR input(DR* dr, int count);//Добавление новых записей
 
-
-void output(DR* dr, int count);//Вывод записей
-
-int write(DR* dr, int count);//Добавление записей в файл 
-
-
-int read();//Чтение записей из файла
-
-
-
-int search_output(DR* dr, int count);//Вывод записей
-
-
-int search(DR* dr, int count);//Поиск записей по выбранной категории
-
-
-DR sort(DR* dr, int count);//Сортировка записей по убыванию
-
-
-
-
+DR* input(DR* gon, int* count, int size);
+void output(DR* gon, int* count);
+int* search_data(DR* dr, int* count, struct tm t);
+int search_name(DR* gon, int* count, char* name_f);
+DR* sort(DR* gon, int* count);
+int write(char* namefile, DR* dr, int* count);
+int read(char* namefile, DR* dr, int size_mas);
+int prov(char* namefile);
 int main()
 {
 	system("chcp 1251");
-	setlocale(0, "Rus");
-	int flag = 1;
-	int k = 0;
-	dr = malloc(k * sizeof(int));
-	int z;
-
-	while (flag != 0)
+	
+	DR* dr;
+	int kol = 0, flag1 = 1, choice1, choicemenu, ind_name, size_mas = 0, size_mas1 = 0, mas_in_file, tm_day, month_f, k = 0, nowyear;
+	dr = (DR*)malloc(kol * sizeof(DR));
+	char name_f[10], namefile[10];
+	int* ind_data;
+	
+	printf("Выберите действие>\n1.Ввод новой записи\n2.Вывод существующей записи из файла\n");
+	scanf("%d", &choicemenu);
+	switch (choicemenu)
 	{
-		printf("\nВвод данных - 1\nВывод данных - 2\nЗапись данных в файл - 3\nВывод данных из файла - 4\nПоиск по катерогрии - 5\nСортировка - 6\nВыход из программы - 7\n");
-		scanf("%d", &z);
-		switch (z)
+	case 1:
+		printf("Введите кол-во записей ");
+		scanf("%d", &kol);
+		printf("------------------------\n");
+		size_mas1 = kol;
+		kol += size_mas;
+		dr = (DR*)realloc(dr, kol * sizeof(DR));
+		input(dr, &kol, size_mas);
+		size_mas += size_mas1;
+	
+
+		break;
+	case 2:
+		printf("Введите название файла\n");
+		scanf("%s", &namefile);
+		mas_in_file = prov(namefile);
+		kol += mas_in_file;
+		dr = (DR*)realloc(dr, kol * sizeof(DR));
+		kol = read(namefile, dr, size_mas);
+		kol += size_mas;
+		size_mas += mas_in_file;
+		output(dr, &kol);
+		break;
+
+	}
+	while (flag1)
+	{
+
+
+		printf("1.Ввод значений\n2.Вывод значений\n3.Поиск по имени\n4.Поиск по дате\n5.Сортировка данных\n6.Запись данных в файл\n7.Чтение данных из файла\n0.Выход из программы\n");
+		scanf("%d", &choice1);
+		switch (choice1)
 		{
 		case 1:
-			printf("Введите количество записей\n");
-			scanf("%d", &k);
-			input(dr, k);
+			printf("Введите кол-во записей ");
+			scanf("%d", &kol);
+			printf("------------------------\n");
+			size_mas1 = kol;
+			kol += size_mas;
+			dr = (DR*)realloc(dr, kol * sizeof(DR));
+			input(dr, &kol, size_mas);
+			size_mas += size_mas1;
 			break;
+
+
 		case 2:
-			output(dr, k);
+
+			output(dr, &kol);
 			break;
+
+
 		case 3:
-			write(dr, k);
+			printf("Введите имя\n");
+			scanf("%s", name_f);
+			ind_name = searchname(dr, &kol, name_f);
+			printf("---------------------------------------------------------------------\n");
+			printf("|| Номер || Имя || Фамилия || Категория || Дата ||\n");
+			printf("---------------------------------------------------------------------\n");
+			printf("||%8d||%13s||%13s||%13s||%2d/%2d/%2d||\n", ind_name + 1, dr[ind_name].name, dr[ind_name].surname, dr[ind_name].cathegory, dr[ind_name].day, dr[ind_name].month, dr[ind_name].year);
+			printf("---------------------------------------------------------------------\n");
 			break;
 		case 4:
-			read();
-			break;
+		{struct tm t;
+		int d, m, y;
+		printf("Введите дату\n");
+		scanf("%d/%d/%d", &t.tm_mday, &t.tm_mon, &t.tm_year);
+		ind_data = search_data(dr, &kol, t);
+		printf("---------------------------------------------------------------------\n");
+		printf("|| Номер || Имя || Фамилия || Категория || Дата ||\n");
+		printf("---------------------------------------------------------------------\n");
+		for (int i = 0; i < kol; i++)
+		{
+			if (ind_data[i] >= 0 && ind_data[i] < kol)
+			{
+				k = ind_data[i];
+
+				printf("||%8d||%13s||%13s||%13s||%2d/%2d/%2d||\n", k, dr[k].name, dr[k].surname, dr[k].cathegory, dr[k].day, dr[k].month, dr[k].year);
+				printf("---------------------------------------------------------------------\n");
+			}
+		}
+		break; }
 		case 5:
-			search(dr, k);
+			printf("Введите текущий год:\n");
+			scanf("%d", &nowyear);
+			sort(dr, &kol, nowyear);
+			output(dr, &kol);
 			break;
 		case 6:
-			sort(dr, k);
+			printf("Введите название файла\n");
+			scanf("%s", &namefile);
+			write(namefile, dr, &kol);
 			break;
 		case 7:
-			flag = 0;
+			printf("Введите название файла\n");
+			scanf("%s", &namefile);
+			mas_in_file = prov(namefile);
+			kol += mas_in_file;
+			dr = (DR*)realloc(dr, kol * sizeof(DR));
+			kol = read(namefile, dr, size_mas);
+			kol += size_mas;
+			size_mas += mas_in_file;
 			break;
 
+		case 0:
+
+			flag1 = 0;
+			printf("Программа заверешна\n");
+			break;
+		default:
+			puts("Данный выбор невозможен");
+
 		}
+
 	}
+	free(dr);
 }
 
-DR input(DR* dr, int count)
+DR* input(DR* dr, int* count, int size_mas)
 {
-	for (int i = 0; i < count; i++)
+	for (int i = size_mas; i < *count; i++)
 	{
 		printf("Введите имя:");
-		scanf("%s", dr->name);
+		scanf("%s", dr[i].name);
 		printf("Введите фамилию:");
-		scanf("%s", dr->surname);
+		scanf("%s", dr[i].surname);
 		printf("Введите Категорию:");
-		scanf("%s", dr->cathegory);
-		printf("Введите день:");
-		scanf("%d", &dr->day);
-		printf("Введите месяц:");
-		scanf("%d", &dr->month);
-		printf("Введите год:");
-		scanf("%d", &dr->year);
+		scanf("%s", dr[i].cathegory);
+		printf("Введите день, месяц, год:");
+		scanf("%d", &dr[i].day);
+		if (dr[i].day < 0 || dr[i].day>31) printf("Недопустимое значение (максимальное кол-во дней в месяце - 31)\n");
+		scanf("%d", &dr[i].month);
+		if (dr[i].month < 0 || dr[i].month>12) printf("Недопустимое значение ( кол-во месяцев в году - 12)\n");
+		scanf("%d", &dr[i].year);
 		printf("\n");
-		dr++;
 	}
-	return *dr;
+	return dr;
 }
-
-void output(DR* dr, int count)
+void output(DR* dr, int* count)
 {
-	for (int i = 0; i < count; i++)
+	printf("---------------------------------------------------------------------\n");
+	printf("|| Номер || Имя || Фамилия || Категория || Дата ||\n");
+	printf("---------------------------------------------------------------------\n");
+	for (int i = 0; i < *count; i++)
 	{
-		printf("Имя: %s\nФамилия: %s\nКатегория: %s\nДата рождения: %d/%d/%d\n\n", dr->name, dr->surname, dr->cathegory, dr->day, dr->month, dr->year);
-		dr++;
+		printf("||%8d||%13s||%13s||%13s||%2d/%2d/%2d||\n", i + 1, dr[i].name, dr[i].surname, dr[i].cathegory, dr[i].day, dr[i].month, dr[i].year);
 
 	}
-	return 0;
 
 }
-
-int write(DR* dr, int count)
+int searchname(DR* gon, int* count, char* name_f)
 {
 
-	FILE* ptr_file = fopen("kp.txt", "w");
-	for (int i = 0; i < count; i++)
+	int num = -1;
+	for (int i = 0; i < *count; i++)
 	{
-		fprintf(ptr_file, "Имя:%s\nФамилия:%s\nКатегория:%s\nДата: %d/%d/%d\n", dr[i].name, dr[i].surname, dr[i].cathegory, dr[i].day, dr[i].month, dr[i].year);
-	}
-	fclose(ptr_file);
-	printf("\nДанные успешно сохранены\n");
-}
-
-int read()
-{
-	char rfile[LEN];
-	FILE* ptr_file = fopen("kp.txt", "r");
-	while (fgets(rfile, LEN, ptr_file))
-		fprintf(stdout, "%s\n", rfile);
-
-}
-
-
-int search_output(DR* dr, int count)
-{
-	printf("Имя:%s\nФамилия:%s\nКатегория:%s\nДата: %d/%d/%d  \n", dr[count].name, dr[count].surname, dr[count].cathegory, dr[count].day, dr[count].month, dr[count].year);
-}
-
-int search(DR* dr, int count)
-{
-	int z;
-	short name_f[20], surname_f[20], cathegory_f[20];
-
-
-	int day_f;
-	int month_f;
-	int year_f;
-
-	printf("Выберите критерий поиска\n");
-	printf("По имени - 1\n");
-	printf("По фамилии - 2\n");
-	printf("По категории - 3\n");
-	printf("По дате рождения - 4\n");
-	scanf("%d", &z);
-	if (z == 1)
-	{
-		printf("Введите имя:\n");
-		scanf("%s", &name_f);
-		for (int i = 0; i < count; i++)
+		if (strcmp(gon[i].name, name_f) == 0)
 		{
-			if (strcmp((dr + i)->name, name_f) == 0)
-			{
-				search_output(dr, i);
-			}
+			num = i;
 		}
-		dr++;
-	}
-	if (z == 2)
-	{
-		printf("Введите фамилию:\n");
-		scanf("%s", &surname_f);
-		for (int i = 0; i < count; i++)
-		{
-			if (strcmp((dr + i)->surname, surname_f) == 0)
-			{
-				search_output(dr, i);
-			}
-		}
-		dr++;
-	}
-	if (z == 3)
-	{
-		printf("Введите категорию:\n");
-		scanf("%s", &cathegory_f);
-		for (int i = 0; i < count; i++)
-		{
-			if (strcmp((dr + i)->cathegory, cathegory_f) == 0)
-			{
-				search_output(dr, i);
-			}
-		}
-		dr++;
-	}
-	if (z == 4)
-	{
-		printf("Введите день\n");
-		scanf("%d", &day_f);
-		printf("Введите месяц\n");
-		scanf("%d", &month_f);
-		printf("Введите год\n");
-		scanf("%d", &year_f);
 
-		for (int i = 0; i < count; i++)
-		{
-			if (day_f == dr[i].day && month_f == dr[i].month && year_f == dr[i].year)
-			{
-				search_output(dr, i);
-			}
-		}
-		dr++;
+
+
 	}
+	return num;
+
 
 }
-
-DR sort(DR* dr, int count)
+int* search_data(DR* dr, int* count, struct tm t)
 {
+
+	int* num = (int*)malloc(*count * sizeof(int));
+
+	int n = 0;
+	for (int i = 0; i < *count; i++)
+	{
+		if (t.tm_mday == dr[i].day && t.tm_mon == dr[i].month && t.tm_year == dr[i].year)
+		{
+			num[n++] = i;
+		}
+
+	}
+	return num;
+}
+DR* sort(DR* dr, int* count, int nowyear)
+{
+
 	DR sort;
-	printf("Введите текущий год\n");
-	int nowyear;
-	scanf("%d", &nowyear);
-	for (int i = count - 1; i >= 0; i--)
+
+	int left = 0, right = *count - 1; // левая и правая границы сортируемой области массива
+	int flag = 1; // флаг наличия перемещений
+	while ((left < right) && flag > 0)
 	{
-		for (int g = 0; g < i; g++)
+		flag = 0;
+		for (int i = left; i < right; i++) //двигаемся слева направо
 		{
-			if ((nowyear - dr[g].year) < (nowyear - dr[g + 1].year))
-			{
-				sort = dr[g];
-				dr[g] = dr[g + 1];
-				dr[g + 1] = sort;
+			if (nowyear - dr[i].year < nowyear - dr[i + 1].year) // если следующий элемент меньше текущего,
+			{ // меняем их местами
+				double t = dr[i].year;
+				dr[i].year = dr[i + 1].year;
+				dr[i + 1].year = t;
+				flag = 1; // перемещения в этом цикле были
 			}
 		}
+		right--; // сдвигаем правую границу на предыдущий элемент
+		for (int i = right; i > left; i--) //двигаемся справа налево
+		{
+			if (nowyear - dr[i - 1].year < nowyear - dr[i].year) // если предыдущий элемент больше текущего,
+			{ // меняем их местами
+				double t = dr[i].year;
+				dr[i].year = dr[i - 1].year;
+				dr[i - 1].year = t;
+				flag = 1; // перемещения в этом цикле были
+			}
+		}
+		left++; // сдвигаем левую границу на следующий элемент
 	}
-	printf("\nСортировка завершена\n");
-	return *dr;
-	
+
+	printf("Сортировка по возрасту в порядке убывния завершена\n");
+
+	return dr;
+}
+int write(char* namefile, DR* dr, int* count)
+{
+	FILE* file;
+	if ((file = fopen(namefile, "wt")) == NULL)
+	{
+		fprintf(stderr, "Файл нельзя открыть для записи\n");
+		system("pause");
+		return -1;
+
+	}
+	else
+	{
+		for (int i = 0; i < *count; i++)
+		{
+			fprintf(file, "%s\n", dr[i].name);
+			fprintf(file, "%s\n", dr[i].surname);
+			fprintf(file, "%s\n", dr[i].cathegory);
+			fprintf(file, "%d\n", dr[i].day);
+			fprintf(file, "%d\n", dr[i].month);
+			fprintf(file, "%d\n", dr[i].year);
+
+
+		}
+		fclose(file);
+		printf("Данные записаны\n");
+	}
+}
+int read(char* namefile, DR* dr, int size_mas)
+{
+	FILE* open;
+	int z;
+	int i = size_mas;
+	int o = 0;
+	open = fopen(namefile, "rb");
+	while (!feof(open))
+	{
+		fscanf(open, "\r\n%d\r\n", &z);
+		fscanf(open, "%s\r\n", dr[i].name);
+		fscanf(open, "%s\r\n", &dr[i].surname);
+		fscanf(open, "%s\r\n", &dr[i].cathegory);
+		fscanf(open, "%d\r\n", &dr[i].day);
+		fscanf(open, "%d\r\n", &dr[i].month);
+		fscanf(open, "%d\r\n", &dr[i].year);
+		i += 1;
+		o += 1;
+	}
+	fclose(open);
+	printf("Файл прочитан\n");
+	return o;
+}
+int prov(char* namefile)
+{
+	FILE* open;
+	int n = 0;
+	open = fopen(namefile, "rb");
+	while (!feof(open))
+	{
+		if (fgetc(open) == '\n')
+			n += 1;
+	}
+	fclose(open);
+	return n / 6;
 }
 
